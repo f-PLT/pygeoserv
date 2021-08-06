@@ -1,0 +1,9 @@
+# run: conda env create --file environment.yml
+name: pygeoserv
+channels:
+  - conda-forge
+dependencies:
+  - python<3.9
+  - pip
+  - pip:
+    - -r file:requirements.txt
