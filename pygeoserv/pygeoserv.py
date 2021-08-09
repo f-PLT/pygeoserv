@@ -2,6 +2,8 @@
 Main pygeoserv module
 """
 from typing import Dict
+import pprint
+import json
 
 import requests
 
@@ -22,7 +24,8 @@ class Pygeoserv:
         """
         self.url = f"{url}/rest/" if not url.endswith("/") else f"{url}rest/"
         self.auth = auth
-        self.headers = {"content-type": "application/xml"}
+        self.headers = {"Content-type": "application/xml"}
+        self._workspace_isolation_default = "True"
 
     @property
     def workspaces(self) -> Dict:
@@ -38,7 +41,7 @@ class Pygeoserv:
         request = requests.get(workspaces_api_url, auth=self.auth)
         return request.json()
 
-    def create_workspace(self, workspace_name) -> bool:
+    def create_workspace(self, workspace_name, isolated=None) -> bool:
         """
         [summary]
 
@@ -52,11 +55,23 @@ class Pygeoserv:
         [type]
             [description]
         """
-        workspaces_api_url = f"{self.url}workspaces/"
-        payload = f"<workspace><name>{workspace_name}</name></workspace>"
+        request_url = f"{self.url}workspaces/"
+        if not isolated:
+            isolated = self._workspace_isolation_default
+        payload = """
+        <workspace>
+            <name>{}</name>
+            <isolated>{}</isolated>
+        </workspace>
+        """.format(
+            workspace_name, isolated
+        )
 
         request = requests.post(
-            workspaces_api_url, data=payload, auth=self.auth, headers=self.headers
+            url=request_url,
+            data=payload,
+            auth=self.auth,
+            headers=self.headers,
         )
         request.raise_for_status()
         return True
@@ -74,6 +89,40 @@ class Pygeoserv:
         folder_path : str
             [description]
         """
-        shapefile_api_url = f"{self.url}{workspace_name}"
-        payload = [store_name, folder_path]
+        request_url = f"{self.url}workspaces/{workspace_name}/datastores"
+        payload = """
+        <dataStore>
+            <name>{}</name>
+            <type>Directory of spatial files (shapefiles)</type>
+            <enabled>true</enabled>
+            <connectionParameters>
+                <charset>UTF-8</charset>
+                <url>file://{}</url>
+                <fstype>shape</fstype>
+                <filetype>shapefile</filetype>
+            </connectionParameters>
+        </dataStore>
+        """.format(
+            store_name, folder_path
+        )
+
+        request = requests.post(
+            url=request_url, data=payload, auth=self.auth, headers=self.headers
+        )
+        request.raise_for_status()
+        return True
+
+    def get_datastore(self, store_name, workspace_name="default"):
+        request_url = f"{self.url}workspaces/{workspace_name}/datastores/{store_name}"
+
+        request = requests.get(url=request_url, auth=self.auth, headers=self.headers)
+        request.raise_for_status()
+        pprint.pprint(request.json())
+        return True
+
+    def get_workspace(self, workspace_name="default"):
+        request_url = f"{self.url}workspaces/{workspace_name}"
+        request = requests.get(url=request_url, auth=self.auth, headers=self.headers)
+        request.raise_for_status()
+        pprint.pprint(request.json())
         return True
