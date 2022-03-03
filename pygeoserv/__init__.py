@@ -1,1 +1,1 @@
-from .pygeoserv import Pygeoserv  # noqa: F401
+from pygeoserv.datastore.factory import datastore_factory
