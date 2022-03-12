@@ -3,6 +3,7 @@ import requests
 SHAPEFILE_DS = "shapefile"
 HEADERS_JSON = {"Content-type": "application/json"}
 
+
 def bool2string(isolated: bool) -> str:
     """
     Transforms a bool value to a string equivalent.
@@ -13,7 +14,9 @@ def bool2string(isolated: bool) -> str:
     return "True" if isolated else "False"
 
 
-def is_response_ok(response: requests.Response, status_code_expected: int=200) -> bool:
+def is_response_ok(
+    response: requests.Response, status_code_expected: int = 200
+) -> bool:
     """
     Checks if response was successful
 

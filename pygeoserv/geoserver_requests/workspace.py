@@ -1,6 +1,6 @@
 import requests
 
-from pygeoserv.utils import bool2string, HEADERS_JSON
+from pygeoserv.utils import HEADERS_JSON, bool2string
 
 
 def create_workspace_request(
@@ -27,6 +27,7 @@ def create_workspace_request(
     )
     return response
 
+
 def workspace_info_request(url: str, auth: tuple, name: str):
     """_summary_
 
@@ -42,6 +43,7 @@ def workspace_info_request(url: str, auth: tuple, name: str):
         headers=HEADERS_JSON,
     )
     return response
+
 
 def workspace_datastore_info_request(url: str, auth: tuple, name: str):
     """_summary_
@@ -60,7 +62,7 @@ def workspace_datastore_info_request(url: str, auth: tuple, name: str):
     return response
 
 
-def remove_workspace_request(url: str, auth: tuple, name: str)-> requests.Response:
+def remove_workspace_request(url: str, auth: tuple, name: str) -> requests.Response:
     """_summary_
 
     :param url: _description_

@@ -2,9 +2,8 @@ from abc import ABC, abstractmethod
 
 import requests
 
-
-from pygeoserv.workspace import Workspace
 from pygeoserv.utils import is_response_ok
+from pygeoserv.workspace import Workspace
 
 
 class AbstractDatastore(ABC):
@@ -28,9 +27,7 @@ class AbstractDatastore(ABC):
 
         :return: True is datastore exists
         """
-        response = requests.get(
-            url=self.url, auth=self.geoserver.auth
-        )
+        response = requests.get(url=self.url, auth=self.geoserver.auth)
         return is_response_ok(response)
 
     @abstractmethod

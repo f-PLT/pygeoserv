@@ -1,13 +1,13 @@
 from requests import Response
 
 from pygeoserv.geoserver import Geoserver
-from pygeoserv.utils import is_response_ok
 from pygeoserv.geoserver_requests.workspace import (
     create_workspace_request,
-    workspace_info_request,
-    workspace_datastore_info_request,
     remove_workspace_request,
+    workspace_datastore_info_request,
+    workspace_info_request,
 )
+from pygeoserv.utils import is_response_ok
 
 
 class Workspace:
@@ -71,7 +71,6 @@ class Workspace:
         )
         response.raise_for_status()
         return response.json()
-
 
     def create_workspace(self) -> Response:
         """

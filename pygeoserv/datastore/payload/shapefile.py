@@ -19,7 +19,9 @@ def shapefile_datastore_creation(store_name: str) -> dict:
     return payload
 
 
-def shapefile_datastore_configuration(store_name: str, geoserver_datastore_path: str) -> dict:
+def shapefile_datastore_configuration(
+    store_name: str, geoserver_datastore_path: str
+) -> dict:
     """
 
     :param store_name: Name of the store being configured

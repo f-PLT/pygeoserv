@@ -1,13 +1,13 @@
 import requests
 
 from pygeoserv.datastore.abstract_datastore import AbstractDatastore
-from pygeoserv.workspace import Workspace
 from pygeoserv.geoserver_requests.datastore import (
-    create_shapefile_store_request,
     configure_datastore_request,
+    create_shapefile_store_request,
     publish_shapefile_layer_request,
     remove_shapefile_layer_request,
 )
+from pygeoserv.workspace import Workspace
 
 
 class ShapefileDatastore(AbstractDatastore):

@@ -1,8 +1,7 @@
 import requests
 
-from pygeoserv.utils import HEADERS_JSON
 from pygeoserv.datastore.payload import shapefile
-
+from pygeoserv.utils import HEADERS_JSON
 
 #
 # Shapefile requests
