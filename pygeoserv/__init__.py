@@ -1,1 +1,0 @@
-from pygeoserv.datastore.factory import datastore_factory

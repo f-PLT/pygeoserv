@@ -1,7 +1,6 @@
 """
 Main pygeoserv module
 """
-from email import header
 import requests
 
 
@@ -15,14 +14,8 @@ class Geoserver:
         :param url: Base url of Geoserver instance
         :param auth: Credentials tuple ("username", "password")
         """
-        self.server_url = url
-        self.url = (
-            f"{self.server_url}/rest"
-            if not self.server_url.endswith("/")
-            else f"{self.server_url}rest"
-        )
+        self.url = url
         self.auth = auth
-        self.headers = {"Content-type": "application/json"}
         self.status()
 
     def status(self) -> dict:
@@ -32,7 +25,7 @@ class Geoserver:
         :returns: Status response in Json format
 
         """
-        connection_url = self.url + "/about/status.json"
+        connection_url = self.url + "/rest/about/status.json"
         response = requests.get(connection_url, auth=self.auth)
         response.raise_for_status()
         return response.json()

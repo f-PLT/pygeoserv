@@ -1,8 +1,13 @@
 import requests
 
 from pygeoserv.datastore.abstract_datastore import AbstractDatastore
-from pygeoserv.datastore.payload import shapefile
 from pygeoserv.workspace import Workspace
+from pygeoserv.geoserver_requests.datastore import (
+    create_shapefile_store_request,
+    configure_datastore_request,
+    publish_shapefile_layer_request,
+    remove_shapefile_layer_request,
+)
 
 
 class ShapefileDatastore(AbstractDatastore):
@@ -14,9 +19,9 @@ class ShapefileDatastore(AbstractDatastore):
         :param datastore_name: Datastore's name
         :param data_path: Path to the data on the server
         """
-        super().__init__(workspace=workspace, datastore_name=datastore_name, data_path=data_path)
-        if not self._does_datastore_exist():
-            self.create_datastore()
+        super().__init__(
+            workspace=workspace, datastore_name=datastore_name, data_path=data_path
+        )
 
     #
     # Abstract class implementation
@@ -28,11 +33,12 @@ class ShapefileDatastore(AbstractDatastore):
         :return: Response object
         """
         response = self._create_shapefile_store()
-        if response.status_code != 200:
+        print(response.status_code)
+        if response.status_code != 201:
             return response
 
         response = self._configure_datastore()
-        if response.status_code != 201:
+        if response.status_code != 200:
             return response
 
         return response
@@ -43,9 +49,7 @@ class ShapefileDatastore(AbstractDatastore):
         :return: Response object
         """
         request_url = f"{self.url}?recurse=true"
-        response = requests.delete(
-            url=request_url, auth=self.geoserver.auth, headers=self.geoserver.headers
-        )
+        response = requests.delete(url=request_url, auth=self.geoserver.auth)
         return response
 
     def publish_layer(self, filename) -> requests.Response:
@@ -54,13 +58,12 @@ class ShapefileDatastore(AbstractDatastore):
         :param filename: Filename of layer to publish
         :return: Response object
         """
-        request_url = f"{self.url}/featuretypes"
-        payload = shapefile.shapefile_publishing_configuration(filename)
-        response = requests.post(
-            url=request_url,
-            json=payload,
+        response = publish_shapefile_layer_request(
+            url=self.geoserver.url,
             auth=self.geoserver.auth,
-            headers=self.geoserver.headers,
+            workspace_name=self.workspace.name,
+            datastore_name=self.name,
+            filename=filename,
         )
         return response
 
@@ -70,10 +73,14 @@ class ShapefileDatastore(AbstractDatastore):
         :param filename: Filename of layer to publish
         :return: Response object
         """
-        request_url = f"{self.url}/featuretypes/{filename}?recurse=true"
-        response = requests.delete(
-            url=request_url, auth=self.geoserver.auth, headers=self.geoserver.headers
+        response = remove_shapefile_layer_request(
+            url=self.geoserver.url,
+            auth=self.geoserver.auth,
+            workspace_name=self.workspace.name,
+            datastore_name=self.name,
+            filename=filename,
         )
+        response.raise_for_status()
         return response
 
     #
@@ -89,14 +96,11 @@ class ShapefileDatastore(AbstractDatastore):
         :return:
         """
 
-        request_url = f"{self.geoserver.url}/workspaces/{self.workspace.name}/datastores"
-        payload = shapefile.shapefile_datastore_creation(self.name)
-
-        response = requests.post(
-            url=request_url,
-            json=payload,
+        response = create_shapefile_store_request(
+            url=self.geoserver.url,
             auth=self.geoserver.auth,
-            headers=self.geoserver.headers
+            workspace_name=self.workspace.name,
+            datastore_name=self.name,
         )
         response.raise_for_status()
         return response
@@ -109,16 +113,12 @@ class ShapefileDatastore(AbstractDatastore):
 
         :returns: Response object
         """
-        geoserver_datastore_path = f"file://{self.data_path}"
-        request_url = f"{self.geoserver.url}/workspaces/{self.workspace.name}/datastores/{self.name}"
-        payload = shapefile.shapefile_datastore_configuration(
-            self.name, geoserver_datastore_path
-        )
-        response = requests.put(
-            url=request_url,
-            json=payload,
+        response = configure_datastore_request(
+            url=self.geoserver.url,
             auth=self.geoserver.auth,
-            headers=self.geoserver.headers,
+            workspace_name=self.workspace.name,
+            datastore_name=self.name,
+            data_path=self.data_path,
         )
         response.raise_for_status()
         return response

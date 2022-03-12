@@ -1,11 +1,22 @@
-import requests
+from requests import Response
 
 from pygeoserv.geoserver import Geoserver
-from pygeoserv.utils import bool2string, is_response_ok
+from pygeoserv.utils import is_response_ok
+from pygeoserv.geoserver_requests.workspace import (
+    create_workspace_request,
+    workspace_info_request,
+    workspace_datastore_info_request,
+    remove_workspace_request,
+)
 
 
 class Workspace:
-    def __init__(self, geoserver: Geoserver, workspace_name: str, isolated: bool = False) -> None:
+    def __init__(
+        self,
+        geoserver: Geoserver,
+        workspace_name: str,
+        is_isolated: bool = False,
+    ) -> None:
         """
         A Geoserver Workspace.
 
@@ -20,22 +31,19 @@ class Workspace:
         self.geoserver = geoserver
         self.name = workspace_name
         self.url = f"{geoserver.url}/workspaces/{self.name}"
-        self.isolated = bool2string(isolated)
-        if not self._does_workspace_exist():
-            self.create_workspace()
+        self.is_isolated = is_isolated
 
-    def _does_workspace_exist(self):
+    def does_workspace_exist(self):
         """
         Checks if the workspace exists on the Geoserver server
 
         :returns: Returns true if workspace exists
         """
 
-        response = requests.get(
-            url=self.url,
-            auth=self.geoserver.auth,
-            headers=self.geoserver.headers,
+        response = workspace_info_request(
+            url=self.geoserver.url, auth=self.geoserver.auth, name=self.name
         )
+        response.raise_for_status()
         return is_response_ok(response)
 
     def info(self) -> dict:
@@ -45,42 +53,71 @@ class Workspace:
         :returns: Returns workspace information in Json format
         """
 
-        response = requests.get(
-            url=self.url,
-            auth=self.geoserver.auth,
-            headers=self.geoserver.headers,
+        response = workspace_info_request(
+            url=self.geoserver.url, auth=self.geoserver.auth, name=self.name
         )
         response.raise_for_status()
         return response.json()
 
-    def create_workspace(self) -> requests.Response:
+    def datastores_info(self):
+        """
+        Fetch information about the workspace
+
+        :returns: Returns workspace information in Json format
+        """
+
+        response = workspace_datastore_info_request(
+            url=self.geoserver.url, auth=self.geoserver.auth, name=self.name
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+    def create_workspace(self) -> Response:
         """
         Create a workspace on Geoserver server
 
         :return: Response Object
         """
-        request_url = f"{self.geoserver.url}/workspaces/"
-        isolate = self.isolated
-        payload = {"workspace": {"name": self.name, "isolated": isolate}}
-
-        response = requests.post(
-            url=request_url,
-            json=payload,
+        response = create_workspace_request(
+            url=self.geoserver.url,
             auth=self.geoserver.auth,
-            headers=self.geoserver.headers,
+            name=self.name,
+            is_isolated=self.is_isolated,
         )
         response.raise_for_status()
         return response
 
-    def remove_workspace(self) -> requests.Response:
+    def remove_workspace(self) -> Response:
         """
         Remove the workspace from the Geoserver server
 
         :return: Response object
         """
-        request_url = f"{self.url}?recurse=true"
-        response = requests.delete(
-            url=request_url, auth=self.geoserver.auth, headers=self.geoserver.headers
+        response = remove_workspace_request(
+            url=self.geoserver.url,
+            auth=self.geoserver.auth,
+            name=self.name,
         )
         response.raise_for_status()
         return response
+
+
+def create_workspace(
+    geoserver: Geoserver, workspace_name: str, is_isolated: bool = False
+) -> Workspace:
+    """
+    Creates a workspace object. If the workspace does not exist on the
+    server, it will be created
+
+    :param geoserver: Geoserver instance
+    :param workspace_name: Name of the workspace
+    :param isolated: Is the workspace isolated (only important if creating
+            a workspace that doesn't already exist on the server)
+    """
+    workspace = Workspace(
+        geoserver=geoserver, workspace_name=workspace_name, is_isolated=is_isolated
+    )
+    if not workspace.does_workspace_exist():
+        workspace.create_workspace()
+    return workspace

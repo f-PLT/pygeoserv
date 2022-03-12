@@ -1,6 +1,7 @@
 import requests
 
 SHAPEFILE_DS = "shapefile"
+HEADERS_JSON = {"Content-type": "application/json"}
 
 def bool2string(isolated: bool) -> str:
     """

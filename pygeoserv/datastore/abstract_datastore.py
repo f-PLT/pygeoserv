@@ -6,8 +6,6 @@ import requests
 from pygeoserv.workspace import Workspace
 from pygeoserv.utils import is_response_ok
 
-SHAPEFILE = "shapefile"
-
 
 class AbstractDatastore(ABC):
     def __init__(self, workspace: Workspace, datastore_name: str, data_path: str):
@@ -24,14 +22,14 @@ class AbstractDatastore(ABC):
         self.url = f"{self.workspace.url}/datastores/{self.name}"
         self.data_path = data_path
 
-    def _does_datastore_exist(self):
+    def does_datastore_exist(self):
         """
         Checks if datastore exists
 
         :return: True is datastore exists
         """
         response = requests.get(
-            url=self.url, auth=self.geoserver.auth, headers=self.geoserver.headers
+            url=self.url, auth=self.geoserver.auth
         )
         return is_response_ok(response)
 

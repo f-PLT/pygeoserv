@@ -1,8 +1,9 @@
 from pygeoserv.datastore import shapefile_datastore
-from pygeoserv.datastore.abstract_datastore import AbstractDatastore, SHAPEFILE
+from pygeoserv.datastore.abstract_datastore import AbstractDatastore
 from pygeoserv.workspace import Workspace
+from pygeoserv.utils import SHAPEFILE_DS
 
-DATASTORES = {SHAPEFILE: shapefile_datastore.ShapefileDatastore}
+DATASTORES = {SHAPEFILE_DS: shapefile_datastore.ShapefileDatastore}
 
 
 def datastore_factory(
@@ -20,5 +21,6 @@ def datastore_factory(
     """
 
     datastore_instance = DATASTORES[store_type](workspace, datastore_name, data_path)
+    datastore_instance.create_datastore()
 
     return datastore_instance
