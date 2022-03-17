@@ -1,3 +1,5 @@
+# pylint: disable=C0116
+
 from abc import ABC, abstractmethod
 
 import requests
@@ -7,6 +9,11 @@ from pygeoserv.workspace import Workspace
 
 
 class AbstractDatastore(ABC):
+    """
+    Abstract datastore class to be implemented by the different
+    datatore types of Geoserver
+    """
+
     def __init__(self, workspace: Workspace, datastore_name: str, data_path: str):
         """
 

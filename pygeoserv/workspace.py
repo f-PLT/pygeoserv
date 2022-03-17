@@ -2,15 +2,16 @@ from requests import Response
 
 from pygeoserv.geoserver import Geoserver
 from pygeoserv.geoserver_requests.workspace import (
-    create_workspace_request,
-    remove_workspace_request,
-    workspace_datastore_info_request,
-    workspace_info_request,
-)
+    create_workspace_request, remove_workspace_request,
+    workspace_datastore_info_request, workspace_info_request)
 from pygeoserv.utils import is_response_ok
 
 
 class Workspace:
+    """
+    Class that represents a Geoserver workspace
+    """
+
     def __init__(
         self,
         geoserver: Geoserver,
