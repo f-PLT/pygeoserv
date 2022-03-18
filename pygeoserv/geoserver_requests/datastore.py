@@ -38,7 +38,7 @@ def create_shapefile_store_request(
     return response
 
 
-def configure_datastore_request(
+def configure_shapefile_store_request(
     url: str, auth: tuple, workspace_name: str, datastore_name: str, data_path: str
 ) -> requests.Response:
     """

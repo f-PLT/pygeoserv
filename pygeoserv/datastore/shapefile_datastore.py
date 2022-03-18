@@ -2,8 +2,11 @@ import requests
 
 from pygeoserv.datastore.abstract_datastore import AbstractDatastore
 from pygeoserv.geoserver_requests.datastore import (
-    configure_datastore_request, create_shapefile_store_request,
-    publish_shapefile_layer_request, remove_shapefile_layer_request)
+    configure_shapefile_store_request,
+    create_shapefile_store_request,
+    publish_shapefile_layer_request,
+    remove_shapefile_layer_request,
+)
 from pygeoserv.workspace import Workspace
 
 
@@ -115,7 +118,7 @@ class ShapefileDatastore(AbstractDatastore):
 
         :returns: Response object
         """
-        response = configure_datastore_request(
+        response = configure_shapefile_store_request(
             url=self.geoserver.url,
             auth=self.geoserver.auth,
             workspace_name=self.workspace.name,

@@ -37,7 +37,7 @@ class Geoserver:
 
         :returns: Information about workspaces in Json format
         """
-        workspaces_api_url = f"{self.url}/workspaces/"
+        workspaces_api_url = f"{self.url}/rest/workspaces/"
         response = requests.get(workspaces_api_url, auth=self.auth)
         response.raise_for_status()
         return response.json()

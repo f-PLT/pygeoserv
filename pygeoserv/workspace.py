@@ -2,8 +2,11 @@ from requests import Response
 
 from pygeoserv.geoserver import Geoserver
 from pygeoserv.geoserver_requests.workspace import (
-    create_workspace_request, remove_workspace_request,
-    workspace_datastore_info_request, workspace_info_request)
+    create_workspace_request,
+    remove_workspace_request,
+    workspace_datastore_info_request,
+    workspace_info_request,
+)
 from pygeoserv.utils import is_response_ok
 
 
@@ -33,6 +36,8 @@ class Workspace:
         self.name = workspace_name
         self.url = f"{geoserver.url}/workspaces/{self.name}"
         self.is_isolated = is_isolated
+        if not self.does_workspace_exist():
+            self.create_workspace()
 
     def does_workspace_exist(self):
         """
@@ -44,7 +49,6 @@ class Workspace:
         response = workspace_info_request(
             url=self.geoserver.url, auth=self.geoserver.auth, name=self.name
         )
-        response.raise_for_status()
         return is_response_ok(response)
 
     def info(self) -> dict:
