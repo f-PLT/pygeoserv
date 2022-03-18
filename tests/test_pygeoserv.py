@@ -1,12 +1,9 @@
-"""[summary]"""
-from pygeoserv import Pygeoserv
-
-AUTH = ("admin", "myawesomegeoserver")
+from pygeoserv.geoserver import Geoserver
 
 
-def test_bogus():
-    my_geoserver = Pygeoserv("http://192.168.0.20:8600/geoserver", AUTH)
-    response = my_geoserver.workspaces
-    url = response["workspaces"]["workspace"][0]["href"]
-    assert url == "http://192.168.0.20:8600/geoserver/rest/workspaces/sentiers.json"
+class TestGeoserver:
+    def test_status(self, geoserver: Geoserver):
+        geoserver.status()
 
+    def test_workspaces(self, geoserver: Geoserver):
+        geoserver.workspaces

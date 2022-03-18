@@ -1,0 +1,42 @@
+# Source :https://github.com/kartoza/docker-geoserver
+version: '3'
+volumes:
+   geoserver-data:
+   geo-db-data:
+
+services:
+   db:
+      image: kartoza/postgis:13-3.1
+      container_name: geoserver-db
+      environment:
+        - POSTGRES_DB=gis,gwc
+        - POSTGRES_USER=docker
+        - POSTGRES_PASS=docker
+        - ALLOW_IP_RANGE=0.0.0.0/0
+        - FORCE_SSL=FALSE
+      restart: on-failure
+      healthcheck:
+        test: "exit 0"
+
+   geoserver:
+      image: kartoza/geoserver:2.19.0
+      container_name: geoserver
+      volumes:
+        - ./test_data:/data
+      ports:
+        - "9876:8080"
+      restart: on-failure
+      environment:
+        - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
+        - GEOWEBCACHE_CACHE_DIR=/opt/geoserver/data_dir/gwc
+        - GEOSERVER_ADMIN_PASSWORD=myawesomegeoserver
+        - GEOSERVER_ADMIN_USER=admin
+        - INITIAL_MEMORY=2G
+        - MAXIMUM_MEMORY=4G
+      depends_on:
+        - db
+      healthcheck:
+        test: curl --fail -s http://localhost:8080/ || exit 1
+        interval: 1m30s
+        timeout: 10s
+        retries: 3
