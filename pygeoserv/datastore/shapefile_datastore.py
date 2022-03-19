@@ -38,7 +38,6 @@ class ShapefileDatastore(AbstractDatastore):
         :return: Response object
         """
         response = self._create_shapefile_store()
-        print(response.status_code)
         if response.status_code != 201:
             return response
 
