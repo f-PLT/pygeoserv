@@ -1,4 +1,9 @@
 # Source :https://github.com/kartoza/docker-geoserver
+#
+# Very simple docker compose setup for testing
+#
+# Should automatically be launched and taken down in the tox.ini configuration
+
 version: '3'
 volumes:
    geoserver-data:
