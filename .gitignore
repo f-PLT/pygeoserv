@@ -1,0 +1,6 @@
+**/__pycache__
+**/.pytest*
+**/*.egg*
+build/
+dist/
+.tox
