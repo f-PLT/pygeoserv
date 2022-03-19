@@ -34,10 +34,8 @@ class Workspace:
 
         self.geoserver = geoserver
         self.name = workspace_name
-        self.url = f"{geoserver.url}/workspaces/{self.name}"
+        self.url = f"{geoserver.url}/rest/workspaces/{self.name}"
         self.is_isolated = is_isolated
-        if not self.does_workspace_exist():
-            self.create_workspace()
 
     def does_workspace_exist(self):
         """
