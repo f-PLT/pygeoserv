@@ -21,9 +21,14 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
 
-check:
+check-formating:
   script:
-    - pip install -r requirements_dev.txt
-    - tox -e check
+    - pip install tox
+    - tox -e check-formating
+    
+linting:
+  script:
+    - pip install tox
+    - tox -e pylint
 
 
