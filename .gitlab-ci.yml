@@ -6,6 +6,4 @@ before_script:
 check:  
   image: python:3.10-slim
   script:
-    - tox -e check-formating
-    - tox -e pylint
-    
+    - tox -e check  
