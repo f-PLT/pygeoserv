@@ -23,7 +23,7 @@ before_script:
 
 check:
   script:
-    - pip install requirements_dev.txt
+    - pip install -r requirements_dev.txt
     - tox -e check
 
 
