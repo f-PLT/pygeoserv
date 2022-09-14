@@ -21,10 +21,9 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
 
-test:
+check:
   script:
-    - python setup.py test
     - pip install requirements_dev.txt
-    - tox -e black isort pylint
+    - tox -e check
 
 
