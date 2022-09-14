@@ -24,6 +24,6 @@ before_script:
 check:
   script:
     - pip install tox
-    - tox -e check-formating
-    - tox -e pylint
+    - tox --recreate -e check-formating
+    - tox --recreate -e pylint
     
