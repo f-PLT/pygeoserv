@@ -3,4 +3,4 @@ linting:
   stage: build
   script:
     - pip install tox
-    - tox -e black isort pylint
+    - tox -e black,isort,pylint
