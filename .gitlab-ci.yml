@@ -1,25 +1,18 @@
-pylint:  
-  image: python:3.10
-  stage: build
-  script:
-    - pip install pylint
-    - pylint pygeoserv/
-
 black:  
   image: python:3.10
   stage: build
   script:
-    - pip install black
-    - black --check pygeoserv/ tests/
+    - pip install tox
+    - tox -e black
 
 isort:  
   image: python:3.10
   stage: build
   script:
-    - pip install isort
-    - isort pygeoserv/ tests/ --check 
+    - pip install tox
+    - tox -e isort 
 
-tox:  
+pylint:  
   image: python:3.10
   stage: build
   script:
