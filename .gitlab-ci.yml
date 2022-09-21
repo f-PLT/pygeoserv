@@ -1,20 +1,6 @@
-black:  
+linting:
   image: python:3.10
   stage: build
   script:
     - pip install tox
-    - tox -e black
-
-isort:  
-  image: python:3.10
-  stage: build
-  script:
-    - pip install tox
-    - tox -e isort 
-
-pylint:  
-  image: python:3.10
-  stage: build
-  script:
-    - pip install tox
-    - tox -e pylint
+    - tox -e black isort pylint
