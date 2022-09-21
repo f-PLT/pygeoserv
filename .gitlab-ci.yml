@@ -1,9 +1,27 @@
-before_script:
-  - python --version
-  - pip install -r requirements_dev.txt
-
-
-check:  
-  image: python:3.10-slim
+pylint:  
+  image: python:3.10
+  stage: linting
   script:
-    - tox -e check  
+    - pip install pylint
+    - pylint pygeoserv/
+
+black:  
+  image: python:3.10
+  stage: linting
+  script:
+    - pip install black
+    - black --check pygeoserv/ tests/
+
+isort:  
+  image: python:3.10
+  stage: linting
+  script:
+    - pip install isort
+    - isort pygeoserv/ tests/ --check 
+
+tox:  
+  image: python:3.10
+  stage: linting
+  script:
+    - pip install tox
+    - tox -e pylint
