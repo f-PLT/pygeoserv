@@ -9,7 +9,7 @@ dev_reqs = [line.strip() for line in open('requirements_dev.txt')]
 
 setup(
     name='pygeoserv',
-    version='0.3.0',
+    version='0.3.1',
     packages=find_packages(),
     include_package_data=True,
     install_requires=reqs,
