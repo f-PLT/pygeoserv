@@ -1,6 +1,0 @@
-black
-bumpversion
-pylint
-pytest
-tox
-tox-conda

@@ -8,7 +8,6 @@ from tests.conftest import AUTH, GEOSERVER_URL
 
 
 class TestWorkspaceRequests:
-
     workspace_dict = {
         "create_workspace": "test-create-workspace",
         "workspace_info": "test-workspace-info",
