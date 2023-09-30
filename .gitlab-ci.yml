@@ -1,5 +1,5 @@
 linting:
-  image: python:3.10
+  image: python:3.11
   stage: build
   script:
     - pip install tox
