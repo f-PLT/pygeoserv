@@ -12,7 +12,6 @@ from tests.conftest import AUTH, GEOSERVER_URL, SHAPEFILE_DATA_PATH, SHAPEFILE_L
 
 
 class TestDatastoreRequests:
-
     workspace_dict = {
         "create_shapefile_store": "test-create-shapefile-request",
         "configure_shapefile_store": "test-configure-shapefile-request",
