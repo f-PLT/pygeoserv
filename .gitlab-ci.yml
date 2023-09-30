@@ -2,5 +2,6 @@ linting:
   image: python:3.11
   stage: build
   script:
-    - pip install tox
+    - pip install tox poetry
+    - poetry install
     - tox -e black,isort,pylint
